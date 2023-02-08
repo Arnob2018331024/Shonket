@@ -1,0 +1,31 @@
+function writeObjectArrayToTextFile(fileName, objectArray) {
+        // Create an empty string to store the data
+        let data = "[";
+
+        // Iterate through the object array
+        objectArray.forEach(function(object) {
+          // Convert the object to a string
+          let objectString = JSON.stringify(object, (key, value) =>
+            typeof value === "string" ? value.replace(/[\n\r]/g, " ").replace(/\s+/g, " ") : value
+          );
+          // Add the object string to the data string, followed by a newline
+          data += objectString + " , ";
+        });
+        data += ']'
+        var data2 = ""
+        for (i = 0; i < data.length; i++) {
+          if (data.charAt(i) === '\/')
+            data2 += '\\';
+          data2 += data.charAt(i);
+        }
+        // Create a Blob object with the data and the correct MIME type
+        let blob = new Blob([data2], {
+          type: "text/plain"
+        });
+
+        // Create a link element and trigger a download
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+      }
