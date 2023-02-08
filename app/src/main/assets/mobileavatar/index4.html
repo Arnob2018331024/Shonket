@@ -93,7 +93,7 @@ function weblog(line)
 				
 				<div class="col-md-6 col-sm-6 col-xs-6 text-right"></br>
 			<!--	<button id="voice" type="button" class="btn btn-default" onClick="showAndroidToast('Hello Android!')"><i class="fa-play-circle"></i></button>
-			--><!--<input type="button" id="voice" value="Play Voice Input" align="center" onClick="showAndroidToast('Hello Android!')" class="btn btn-success" />-->
+			--><input type="button" id="voice" value="Play Voice Input" align="center" onClick="showAndroidToast('Hello Android!')" class="btn btn-success" />
 			
 						</div>
 			</div>
@@ -128,10 +128,10 @@ function weblog(line)
 	
 
 	
-        var newsearch= Android.showToast(toast);
+        var newsearch= Android.getString();
 		
 		 $("#engtext").val(newsearch);
-	playenglish();
+		playenglish();
 		
     }
 </script>
@@ -255,7 +255,6 @@ $("#clrDebugger").click(function(){
   When play english button is clicked
 */
 function playenglish() {
-
   console.log("Started parsing");
 
   input = $("#engtext").val().trim().replace(/\r?\n/g, ' '); // change newline to space while reading
@@ -264,82 +263,85 @@ function playenglish() {
     return;
 
   input = input.toLocaleLowerCase();
-
+  //Android.javaFunction(input);
+  //return;
   // check internet
-  if(navigator.onLine && false) {
-  	// has internet connection
-	  console.log("sending request to get root words:"+input);
+  if(navigator.onLine ) {
+ 	// has internet connection
+	 console.log("sending request to get root words"+input);
 
-	  $.getJSON( "http://islfromtext.in/engstemmer/engstem.php?l=" + input, function(data) {
+	$.getJSON( "http://192.168.0.194:5000/?input=" + input, function(data) {
 
-	    console.log("Got root words");
-	    console.log(data);
-	    $("#debugger").text("Play sequence " + JSON.stringify(data));
+	console.log("Got root words");
+	console.log(data.response.length);
+	$("#debugger").text("Play sequence " + JSON.stringify(data));
 
-	    /*
-	      Code to play avatar
-	    */
-	  
-	    playseq = Array();
-	    for(i = 0; i < data.length; i++)
-	      playseq.push(data[i]);
+	/*
+		Code to play avatar
+	*/
 
-	    // start playing only if length of data received
-	    // was more than 0
+	playseq = Array();
+	for(i = 0; i < data.response.length; i++)
+		playseq.push(data.response[i]);
 
-	    if(playseq.length > 0) {
-	      var playtimeout = setInterval(function() {
+	// start playing only if length of data received
+	// was more than 0
 
-	          if(playseq.length == 0 || data.length == 0) {
-	            clearInterval(playtimeout);
-	            console.log("Clear play interval");
-	            avatarbusy=false;
-	            return;
-	          }
+	if(playseq.length > 0) {
+		var playtimeout = setInterval(function() {
 
-	          if(avatarbusy == false) {
-	            avatarbusy = true; // this is set to flase in allcsa.js      
+			if(playseq.length == 0 || data.length == 0) {
+			clearInterval(playtimeout);
+			console.log("Clear play interval");
+			avatarbusy=false;
+			return;
+			}
 
-	            word2play = playseq.shift();    
-	            weblog("Playing sign :" + word2play);
-	            if(lookup[word2play]==null) {
-	              weblog("<span style='color:red;'>SiGML not available for word : " + word2play + "</span>");
-	              avatarbusy=false;
-	              
-	              // break word2play into chars and unshift them to playseq
-	                for(i = word2play.length - 1; i >= 0; i--)
-	                  playseq.unshift(word2play[i]);
-	            
+			if(avatarbusy == false) {
+			avatarbusy = true; // this is set to flase in allcsa.js      
 
-	            } else {
-	              data2play = lookup[word2play];
-	              console.log(data2play);
-	              $("#currentWord").text(word2play);
-	              $(".txtaSiGMLText").val(data2play);
-	              $(".bttnPlaySiGMLText").click();
-	            }
-	          } else {
-	            console.log("Avatar is still busy");
+			word2play = playseq.shift();    
+			weblog("Playing sign :" + word2play);
+			if(lookup[word2play]==null) {
+				weblog("<span style='color:red;'>SiGML not available for word : " + word2play + "</span>");
+				avatarbusy=false;
+				
+				// break word2play into chars and unshift them to playseq
+				for(i = word2play.length - 1; i >= 0; i--)
+					playseq.unshift(word2play[i]);
+			
 
-	            // check if error occured then reset the avatar to free
-	            errtext = $(".statusExtra").val();
-	            if(errtext.indexOf("invalid") != -1) {
-	              weblog("<span style='color:red;'>Error: " + errtext + "</span>");
-	              avatarbusy = false;
-	            }
-	          }
-	      }, 500);
-	    }
+			} else {
+				data2play = lookup[word2play];
+				console.log(data2play);
+				$("#currentWord").text(word2play);
+				$(".txtaSiGMLText").val(data2play);
+				$(".bttnPlaySiGMLText").click();
+			}
+			} else {
+			console.log("Avatar is still busy");
 
-	  });
-	} else {
-		playengoffline();
+			// check if error occured then reset the avatar to free
+			errtext = $(".statusExtra").val();
+			if(errtext.indexOf("invalid") != -1) {
+				weblog("<span style='color:red;'>Error: " + errtext + "</span>");
+				avatarbusy = false;
+			}
+			}
+		}, 500);
 	}
 
-}
+	}).fail(( jqxhr, textStatus, error)=>{
+		playengoffline();
+	});
+	} else {
+	playengoffline();
+	}
+
+	}
 
 
-function playengoffline() {
+	function playengoffline() {
 
 	console.log("Started parsing");
 
@@ -351,57 +353,56 @@ function playengoffline() {
 
 	input = input.toLocaleLowerCase().split(" ");
 
-    playseq = Array();
-    for(i = 0; i < input.length; i++) {
-    	if(input[i].length > 0)
-      		playseq.push(input[i]);
-    }
+	playseq = Array();
+	for(i = 0; i < input.length; i++) {
+	if(input[i].length > 0)
+			playseq.push(input[i]);
+	}
 
-    if(playseq.length > 0) {
-      var playtimeout = setInterval(function() {
+	if(playseq.length > 0) {
+	var playtimeout = setInterval(function() {
 
-          if(playseq.length == 0 || input.length == 0) {
-            clearInterval(playtimeout);
-            console.log("Clear play interval");
-            avatarbusy=false;
-            return;
-          }
+		if(playseq.length == 0 || input.length == 0) {
+		clearInterval(playtimeout);
+		console.log("Clear play interval");
+		avatarbusy=false;
+		return;
+		}
 
-          if(avatarbusy == false) {
-            avatarbusy = true; // this is set to flase in allcsa.js      
+		if(avatarbusy == false) {
+		avatarbusy = true; // this is set to flase in allcsa.js      
 
-            word2play = playseq.shift();    
-            weblog("Playing sign :" + word2play);
-            if(lookup[word2play]==null) {
-              weblog("<span style='color:red;'>SiGML not available for word : " + word2play + "</span>");
-              avatarbusy=false;
-              
-              // break word2play into chars and unshift them to playseq
-                for(i = word2play.length - 1; i >= 0; i--)
-                  playseq.unshift(word2play[i]);
-            
+		word2play = playseq.shift();    
+		weblog("Playing sign :" + word2play);
+		if(lookup[word2play]==null) {
+			weblog("<span style='color:red;'>SiGML not available for word : " + word2play + "</span>");
+			avatarbusy=false;
+			
+			// break word2play into chars and unshift them to playseq
+			for(i = word2play.length - 1; i >= 0; i--)
+				playseq.unshift(word2play[i]);
+		
 
-            } else {
-              data2play = lookup[word2play];
-              console.log(data2play);
-              $("#currentWord").text(word2play);
-              $(".txtaSiGMLText").val(data2play);
-              $(".bttnPlaySiGMLText").click();
-            }
-          } else {
-            console.log("Avatar is still busy");
+		} else {
+			data2play = lookup[word2play];
+			console.log(data2play);
+			$("#currentWord").text(word2play);
+			$(".txtaSiGMLText").val(data2play);
+			$(".bttnPlaySiGMLText").click();
+		}
+		} else {
+		console.log("Avatar is still busy");
 
-            // check if error occured then reset the avatar to free
-            errtext = $(".statusExtra").val();
-            if(errtext.indexOf("invalid") != -1) {
-              weblog("<span style='color:red;'>Error: " + errtext + "</span>");
-              avatarbusy = false;
-            }
-          }
-      }, 500);
-    }
+		// check if error occured then reset the avatar to free
+		errtext = $(".statusExtra").val();
+		if(errtext.indexOf("invalid") != -1) {
+			weblog("<span style='color:red;'>Error: " + errtext + "</span>");
+			avatarbusy = false;
+		}
+		}
+	}, 500);
+	}
 }
-
 
 /*
   function to play example sentences

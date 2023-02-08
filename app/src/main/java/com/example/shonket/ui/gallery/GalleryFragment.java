@@ -31,8 +31,10 @@ public class GalleryFragment extends Fragment {
         WebSettings webSettings=wv.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setAllowFileAccess(true);
+        webSettings.setAllowContentAccess(true);
         webSettings.setAllowUniversalAccessFromFileURLs(true);
         wv.setWebViewClient(new Callback());
+        webSettings.setAllowContentAccess(true);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         wv.loadUrl("file:///android_asset/mobileavatar/index4.html");
 
