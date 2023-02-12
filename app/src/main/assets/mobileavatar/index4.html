@@ -182,6 +182,9 @@ $("#speedUp").click(function() {
 
 var SigmlData;
 var lookup = {};
+var server="http://192.168.0.194:5000/"
+
+
 
 $(document).ready(function() {
 	document.getElementById("engtext").webkitSpeech = true;
@@ -254,6 +257,7 @@ $("#clrDebugger").click(function(){
 /*
   When play english button is clicked
 */
+var waitforresponse=0
 function playenglish() {
   console.log("Started parsing");
 
@@ -268,10 +272,16 @@ function playenglish() {
   // check internet
   if(navigator.onLine ) {
  	// has internet connection
+	 cheheckServer();
+	if(serverfound===0)
+	{ playengoffline();
+		
+		return;
+	}
 	 console.log("sending request to get root words"+input);
 
-	$.getJSON( "http://192.168.0.194:5000/?input=" + input, function(data) {
-
+	$.getJSON( server+"?input=" + input, function(data) {
+	
 	console.log("Got root words");
 	console.log(data.response.length);
 	$("#debugger").text("Play sequence " + JSON.stringify(data));
@@ -289,7 +299,6 @@ function playenglish() {
 
 	if(playseq.length > 0) {
 		var playtimeout = setInterval(function() {
-
 			if(playseq.length == 0 || data.length == 0) {
 			clearInterval(playtimeout);
 			console.log("Clear play interval");
@@ -336,6 +345,7 @@ function playenglish() {
 		playengoffline();
 	});
 	} else {
+	serverfound=0
 	playengoffline();
 	}
 
@@ -414,6 +424,17 @@ function playsign(line)
   $("#engtext").val(line);
   $("#playeng").click();
 }
+
+let serverfound=0
+let cheheckServer=()=>{
+	$.getJSON( server+"?input=bismillah", function(data) {
+		console.log("chckingserver")
+		serverfound=1
+	}).fail(( jqxhr, textStatus, error)=>{
+		serverfound=0
+	});
+}
+cheheckServer()
 
 </script>
 </body></html>
