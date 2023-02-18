@@ -7,27 +7,39 @@
     tools:context=".ui.home.HomeFragment"
     android:orientation="vertical"
     >
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <EditText
-        android:id="@+id/editext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tap on the mic icon for voice.."
-        android:layout_weight="0.8"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/mic_off"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_weight="0.2"
-        android:id="@+id/imgbtn"
-        app:layout_constraintTop_toBottomOf="@+id/editext" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        <TextView
+            android:id="@+id/editext"
+            android:layout_width="337dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="0.8"
+            android:text="Tap on the mic icon for voice input"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/imgbtn"
+            android:layout_width="62dp"
+            android:layout_height="54dp"
+            android:layout_weight="0.2"
+            android:src="@drawable/mic_off"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#A9A9A9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"

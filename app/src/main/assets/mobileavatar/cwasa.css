@@ -39,7 +39,10 @@ h3, h4 {
 	text-align: center; 
 	position: relative; background: white;/*#A3B8D2;*/
 	width: 100%; height: 100%; 
-	margin: 0px; border: 1px solid white; padding: 0px;
+	margin: 0px; border: 1px solid #008375; padding: 0px;
+}
+#showsetting{
+   border: 1px solid #008375;
 }
 
 .CWASAAvatar {

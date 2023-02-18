@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     int coutn=0;
     String speech="";
     ImageButton imageButton;
-    EditText editText;
+    TextView editText;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -74,6 +74,8 @@ public class HomeFragment extends Fragment {
         
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         wv.loadUrl("file:///android_asset/mobileavatar/index4.html");
+
+
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override

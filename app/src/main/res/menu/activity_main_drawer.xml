@@ -14,7 +14,7 @@
             android:title="@string/menu_gallery" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/sentence"
+            android:icon="@drawable/ic_baseline_star_24"
             android:title="@string/menu_slideshow" />
     </group>
 </menu>
