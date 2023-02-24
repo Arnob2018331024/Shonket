@@ -76,9 +76,15 @@ function weblog(line)
  
 	<div class="row">
 		<div class="col-md-12 text-center">
-			<span style="background-color:#ebf8a4; padding: 8px 20px;">
-				<i class="fa fa-spinner fa-spin"></i> &nbsp;Loading application. Please wait...
-			</span>
+			<div class="myloader">
+				<div class="innerloader">
+				  <div class="clock-loader"></div>
+				  <div>
+					<br>
+					 Loading contents... Please wait.
+				  </div>
+				</div>
+			  </div>			  
 		</div>
 	</div>
 </div>
@@ -155,6 +161,14 @@ function weblog(line)
 	&nbsp;
 	<button id="speedUp" class="btn btn-primary"><i class="glyphicon glyphicon-fast-forward"></i></button>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+	<select class="menuAv av0" >
+		<option value="marc">পুরুষ-১</option>
+		<option value="max">পুরুষ-২</option>
+		<option value="darshan">পুরুষ-৩ </option>
+		<option value="luna">মেয়ে-১</option>
+		</select>
+	
 	<button id="hidesetting" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></button>
 </div>
 </div>
@@ -221,7 +235,7 @@ $(document).ready(function() {
             $("#leftSide").slideDown();
           }, 10000);
     
-        }, 6000);
+        }, 150);
       }
   }, 2000);
 
