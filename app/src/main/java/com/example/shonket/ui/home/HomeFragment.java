@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -174,9 +176,10 @@ public class HomeFragment extends Fragment {
 
         /** Get a string from the Java method */
         @JavascriptInterface
-        public String getString() {
-            return speech;
+        public String getString(String message) {
+                return speech;
         }
+
     }
 
     private class JavaScriptInterface {
